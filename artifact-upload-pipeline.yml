@@ -7,9 +7,13 @@ variables:
   patch: $[counter(format('{0}.{1}', variables.major, variables.minor), 1)]
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: ubuntu-24.04
 
 steps:
+- task: UseDotNet@2
+  inputs:
+    version: 10.0.x
+
 - script: echo Version $(major).$(minor).$(patch)
 
 - script: dotnet publish HelloWorld -o $(Build.ArtifactStagingDirectory)
