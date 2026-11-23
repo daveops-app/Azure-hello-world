@@ -1,0 +1,16 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: dotnet publish HelloWorld -o $(Build.ArtifactStagingDirectory)
+
+- task: UniversalPackages@0
+  inputs:
+    command: publish
+    vstsFeedPublish: Azure-Hello-World/hello-world
+    vstsFeedPackagePublish: helloworld
+    versionOption: custom
+    versionPublish: 1.0.0
