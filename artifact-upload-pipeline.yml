@@ -10,7 +10,7 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo "Version: $(major).$(minor).$(patch)"
+- script: echo Version $(major).$(minor).$(patch)
 
 - script: dotnet publish HelloWorld -o $(Build.ArtifactStagingDirectory)
 
