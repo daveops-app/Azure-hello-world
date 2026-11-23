@@ -1,10 +1,17 @@
 trigger:
 - main
 
+variables:
+  major: 1
+  minor: 0
+  patch: $[counter(format('{0}.{1}', variables.major, variables.minor), 1)]
+
 pool:
   vmImage: ubuntu-latest
 
 steps:
+- script: echo "Version: $(major).$(minor).$(patch)"
+
 - script: dotnet publish HelloWorld -o $(Build.ArtifactStagingDirectory)
 
 - task: UniversalPackages@0
@@ -13,4 +20,4 @@ steps:
     vstsFeedPublish: Azure-Hello-World/hello-world
     vstsFeedPackagePublish: helloworld
     versionOption: custom
-    versionPublish: 1.0.0
+    versionPublish: $(major).$(minor).$(patch)
