@@ -1,7 +1,13 @@
 trigger:
 - feature
 
-pr: none
+pr: none # the pipeline runs only on push to feature, not on pull request
+
+variables:
+  major: 1
+  minor: 0
+  patch: $[counter(format('{0}.{1}', variables.major, variables.minor), 1)]
+  version: $(major).$(minor).$(patch)-$(Build.SourceBranchName)
 
 pool:
   vmImage: ubuntu-24.04
@@ -20,8 +26,11 @@ steps:
     organization: daveops-app
     scannerMode: dotnet
     projectKey: daveops-app_Azure-hello-world
+    extraProperties: |
+      sonar.qualitygate.wait=true
 
-- script: dotnet build HelloWorld
+# build the dll in release mode with the version, e.g. 1.0.1-feature
+- script: dotnet build HelloWorld -c Release -p:Version=$(version)
 
 - task: SonarCloudAnalyze@4
   inputs:
@@ -30,3 +39,15 @@ steps:
 - task: SonarCloudPublish@4
   inputs:
     pollingTimeoutSec: 300
+
+# pack the already built dll (no rebuild) into a nuget package in the staging folder
+- script: dotnet pack HelloWorld -c Release --no-build -p:Version=$(version) -o $(Build.ArtifactStagingDirectory)
+  condition: succeeded()
+
+- task: DotNetCoreCLI@2
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'feature'))
+  inputs:
+    command: push
+    packagesToPush: $(Build.ArtifactStagingDirectory)/*.nupkg
+    nuGetFeedType: internal
+    publishVstsFeed: Azure-Hello-World/hello-world
