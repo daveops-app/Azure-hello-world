@@ -51,3 +51,8 @@ steps:
     packagesToPush: $(Build.ArtifactStagingDirectory)/*.nupkg
     nuGetFeedType: internal
     publishVstsFeed: Azure-Hello-World/hello-world
+
+# send an email with the pipeline status, runs even if a step failed
+- script: |
+    echo "Subject: $(Agent.JobStatus) $(version)" | curl smtps://smtp.gmail.com:465 -u "$(EMAIL):$(SMTP_PASSWORD)" --mail-from "$(EMAIL)" --mail-rcpt "$(EMAIL)" -T -
+  condition: always()
