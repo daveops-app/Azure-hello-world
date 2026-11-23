@@ -32,6 +32,12 @@ steps:
 # build the dll in release mode with the version, e.g. 1.0.1-feature
 - script: dotnet build HelloWorld -c Release -p:Version=$(version)
 
+# run the unit tests, the test result shows in the pipeline Tests tab
+- task: DotNetCoreCLI@2
+  inputs:
+    command: test
+    projects: HelloWorld.Tests
+
 - task: SonarCloudAnalyze@4
   inputs:
     jdkversion: JAVA_HOME_21_X64 # docs recommend setting java 21, java 17 support was removed

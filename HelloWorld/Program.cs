@@ -1,3 +1,8 @@
-﻿using System;
+using System;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine(Greeter.GetMessage());
+
+public static class Greeter
+{
+    public static string GetMessage() => "Hello, World!";
+}
