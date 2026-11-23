@@ -28,6 +28,8 @@ steps:
     projectKey: daveops-app_Azure-hello-world
     extraProperties: |
       sonar.qualitygate.wait=true
+      sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
+      sonar.coverage.exclusions=**/Program.cs
 
 # build the dll in release mode with the version, e.g. 1.0.1-feature
 - script: dotnet build HelloWorld -c Release -p:Version=$(version)
@@ -37,6 +39,7 @@ steps:
   inputs:
     command: test
     projects: HelloWorld.Tests
+    arguments: --collect "XPlat Code Coverage;Format=opencover"
 
 - task: SonarCloudAnalyze@4
   inputs:

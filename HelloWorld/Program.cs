@@ -1,8 +1,4 @@
 using System;
+using HelloWorld;
 
 Console.WriteLine(Greeter.GetMessage());
-
-public static class Greeter
-{
-    public static string GetMessage() => "Hello, World!";
-}

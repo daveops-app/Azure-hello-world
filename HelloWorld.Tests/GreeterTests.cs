@@ -1,4 +1,7 @@
+using HelloWorld;
 using Xunit;
+
+namespace HelloWorld.Tests;
 
 public class GreeterTests
 {
