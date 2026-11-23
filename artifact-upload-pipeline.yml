@@ -18,10 +18,10 @@ steps:
 
 - script: dotnet publish HelloWorld -o $(Build.ArtifactStagingDirectory)
 
-- task: UniversalPackages@0
+- task: UniversalPackages@1
   inputs:
     command: publish
-    vstsFeedPublish: Azure-Hello-World/hello-world
-    vstsFeedPackagePublish: helloworld
-    versionOption: custom
-    versionPublish: $(major).$(minor).$(patch)
+    feed: Azure-Hello-World/hello-world
+    packageName: helloworld
+    packageVersion: $(major).$(minor).$(patch)
+    directory: $(Build.ArtifactStagingDirectory)
